@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teaching, Not Policing — Moving Beyond AI Detection</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c1220;
+    --card: #141e30;
+    --card-border: #1e2d45;
+    --accent: #e8a838;
+    --accent-glow: rgba(232, 168, 56, 0.15);
+    --accent-soft: #d4943a;
+    --text: #e2e0dc;
+    --text-muted: #8a9ab5;
+    --text-dim: #5a6a82;
+    --btn-bg: #1a2a42;
+    --btn-hover: #243550;
+    --btn-border: #2a3f5e;
+    --success: #4ecca3;
+    --success-glow: rgba(78, 204, 163, 0.12);
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  .step {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Intro */
+  .intro { margin-bottom: 40px; text-align: center; }
+
+  .badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: var(--accent-glow);
+    border: 1px solid rgba(232, 168, 56, 0.27);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .intro h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .intro .subtitle {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(16px, 3vw, 21px);
+    color: var(--accent);
+    font-style: italic;
+    font-weight: 400;
+    margin-bottom: 32px;
+  }
+
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 0 auto 32px;
+  }
+
+  .intro-text {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 520px;
+    margin: 0 auto 36px;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+    color: var(--bg);
+    border: none;
+    padding: 14px 36px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(232, 168, 56, 0.2);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(232, 168, 56, 0.33);
+  }
+
+  .btn-continue {
+    background: transparent;
+    border: 1px solid rgba(232, 168, 56, 0.33);
+    color: var(--accent);
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.25s;
+  }
+  .btn-continue:hover {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+  }
+
+  .btn-reset {
+    background: transparent;
+    border: 1px solid var(--text-dim);
+    color: var(--text-muted);
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .btn-reset:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Questions */
+  .question-prompt {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-btn {
+    background: var(--btn-bg);
+    border: 1px solid var(--btn-border);
+    border-radius: 8px;
+    padding: 14px 20px;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    transition: all 0.25s ease;
+    font-family: inherit;
+    width: 100%;
+  }
+  .option-btn:hover:not(.selected):not(.dimmed) {
+    background: var(--btn-hover);
+    border-color: rgba(232, 168, 56, 0.27);
+  }
+  .option-btn.selected {
+    background: var(--accent-glow);
+    border-color: rgba(232, 168, 56, 0.4);
+    color: var(--accent);
+    font-weight: 600;
+    cursor: default;
+  }
+  .option-btn.dimmed {
+    opacity: 0.4;
+    color: var(--text-dim);
+    cursor: default;
+  }
+
+  /* Message cards */
+  .message-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    border-left: 3px solid rgba(232, 168, 56, 0.33);
+  }
+
+  .message-card p {
+    margin: 0 0 10px;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  .message-card .bullet {
+    padding-left: 20px;
+    margin-bottom: 6px;
+    line-height: 1.65;
+    font-size: 15px;
+  }
+
+  .message-card .arrow {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 17px;
+    margin: 12px 0;
+    line-height: 1.5;
+  }
+
+  .spacer { height: 12px; }
+
+  .citation {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.8;
+  }
+
+  /* Closing */
+  .closing { text-align: center; padding: 40px 20px; margin-top: 10px; }
+
+  .check-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--success-glow);
+    border: 2px solid rgba(78, 204, 163, 0.27);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 28px;
+  }
+
+  .closing h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .closing .closing-text {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto 12px;
+  }
+
+  .checklist-box {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    max-width: 420px;
+    margin: 32px auto;
+    text-align: left;
+  }
+
+  .checklist-label {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .checklist-item {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .credit {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-top: 32px;
+    font-style: italic;
+  }
+
+  /* References */
+  .references-toggle {
+    margin-top: 32px;
+    text-align: left;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .references-toggle summary {
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+    list-style: none;
+    padding: 8px 0;
+  }
+  .references-toggle summary::-webkit-details-marker { display: none; }
+
+  .references-box {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-top: 12px;
+  }
+
+  .ref-entry {
+    font-size: 12px;
+    line-height: 1.65;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 24px;
+    text-indent: -24px;
+  }
+
+  .ref-num {
+    color: var(--accent);
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .question-block { margin-bottom: 32px; }
+</style>
+</head>
+<body>
+<div class="container" id="app"></div>
+
+<script>
+const STEPS = {
+  welcome: { type: "intro" },
+  feeling: {
+    type: "question",
+    prompt: "First — no judgment here. When you think about students using AI in your class, what\u2019s your gut reaction?",
+    options: [
+      { label: "Frustrated — it feels like cheating", next: "validate_frustrated" },
+      { label: "Overwhelmed — I don\u2019t even know where to start", next: "validate_overwhelmed" },
+      { label: "Curious — but unsure how to handle it", next: "validate_curious" },
+      { label: "Defeated — I can\u2019t compete with this", next: "validate_defeated" },
+    ],
+  },
+  validate_frustrated: {
+    type: "message",
+    content: "That frustration is completely valid. You designed your assignments with care, and it feels like AI lets students skip the learning you built into them. Here\u2019s the thing though — detection tools won\u2019t fix that feeling. They\u2019re unreliable <span class=\"citation\">[1, 2]</span>, they create adversarial dynamics with students, and they don\u2019t address the real problem. Let\u2019s talk about what actually works.",
+    next: "detection_question",
+  },
+  validate_overwhelmed: {
+    type: "message",
+    content: "You\u2019re not behind. The landscape is shifting so fast that feeling overwhelmed is the only rational response. The good news? You don\u2019t need to become an AI expert. You just need a few practical shifts in how you think about your assignments. Let\u2019s walk through it.",
+    next: "detection_question",
+  },
+  validate_curious: {
+    type: "message",
+    content: "That curiosity is your biggest asset right now. A lot of faculty are stuck between panic and denial — the fact that you\u2019re here exploring means you\u2019re already ahead. Let\u2019s channel that curiosity into something concrete.",
+    next: "detection_question",
+  },
+  validate_defeated: {
+    type: "message",
+    content: "I hear you. But here\u2019s something important: you have something AI genuinely cannot replicate — a relationship with your students, knowledge of their individual growth, and the ability to design experiences that matter to them personally. That\u2019s not a small thing. It\u2019s actually your whole strategy. Let me show you what I mean.",
+    next: "detection_question",
+  },
+  detection_question: {
+    type: "question",
+    prompt: "Have you used or considered using AI detection tools (like GPTZero or Turnitin\u2019s AI detector)?",
+    options: [
+      { label: "Yes, I\u2019m currently using one", next: "detection_reality" },
+      { label: "I\u2019ve thought about it", next: "detection_reality" },
+      { label: "No, I don\u2019t trust them", next: "detection_skip" },
+    ],
+  },
+  detection_reality: {
+    type: "message",
+    content: "Here\u2019s what the research shows — and what a lot of vendors won\u2019t tell you:\n\n\u2022 Detection tools have significant false positive rates — independent studies show they frequently misidentify human-written text as AI-generated, particularly for non-native English speakers. <span class=\"citation\">[1, 2]</span>\n\n\u2022 They create an adversarial classroom dynamic. You become a detective instead of a teacher. Students become suspects instead of learners.\n\n\u2022 They\u2019re already being outpaced by newer AI models, and they always will be. It\u2019s an arms race you can\u2019t win. <span class=\"citation\">[1]</span>\n\n\u2022 Most importantly: even a \u201Ccorrect\u201D detection doesn\u2019t teach the student anything.\n\nThe alternative isn\u2019t to ignore AI. It\u2019s to design around it.",
+    next: "assignment_type",
+  },
+  detection_skip: {
+    type: "message",
+    content: "Good instinct. Your energy is better spent elsewhere. The real question isn\u2019t \u201Chow do I catch them?\u201D — it\u2019s \u201Chow do I make my assignments matter enough that AI can\u2019t do them?\u201D Let\u2019s get into that.",
+    next: "assignment_type",
+  },
+  assignment_type: {
+    type: "question",
+    prompt: "Think about your most common assignment. Which of these sounds closest?",
+    options: [
+      { label: "Essays or written analysis", next: "strategy_essays" },
+      { label: "Problem sets or technical work", next: "strategy_technical" },
+      { label: "Discussion posts or short responses", next: "strategy_discussion" },
+      { label: "Research projects or presentations", next: "strategy_research" },
+    ],
+  },
+  strategy_essays: {
+    type: "message",
+    content: "Essays are where faculty panic most about AI — but they\u2019re also where the strongest AI-resistant strategies live. The key principle:\n\n\u2192 Make it personal. Make it specific. Make it connected.\n\nAI can write a generic essay about symbolism in The Great Gatsby. It cannot write about how a specific passage connects to a moment in YOUR student\u2019s life, using references from YOUR class discussion last Tuesday, building on the thesis they workshopped with a peer.\n\nWhen you design prompts at higher levels of Bloom\u2019s Taxonomy — application, analysis, evaluation, creation — you\u2019re already moving into territory where AI struggles. <span class=\"citation\">[6]</span>\n\nSome concrete moves:\n\u2022 Require students to connect readings to personal experience or class-specific discussions\n\u2022 Use scaffolded drafts where each stage builds visibly on the last\n\u2022 Ask students to reflect on their OWN writing process — what they struggled with, what they changed and why\n\u2022 Design prompts that reference shared, ephemeral classroom moments",
+    next: "process_intro",
+  },
+  strategy_technical: {
+    type: "message",
+    content: "Technical work has a hidden advantage: you can assess process, not just product.\n\nAI can solve the problem. It often can\u2019t show the messy, human path to understanding.\n\nSome concrete moves:\n\u2022 Require students to document their problem-solving process — wrong turns included\n\u2022 Use oral components where students explain their reasoning live\n\u2022 Design multi-step problems where later stages depend on choices made earlier\n\u2022 Have students create the problems, not just solve them\n\u2022 Ask \u201Cwhere did you get stuck and how did you get unstuck?\u201D",
+    next: "process_intro",
+  },
+  strategy_discussion: {
+    type: "message",
+    content: "Discussion posts are actually a great opportunity — because the best ones are inherently AI-resistant.\n\nThe trick: anchor them to something specific and immediate that AI doesn\u2019t have access to.\n\nSome concrete moves:\n\u2022 Tie prompts to that day\u2019s class experience — \u201Crespond to something a classmate said today that surprised you\u201D\n\u2022 Use media prompts that rotate frequently (a Song of the Day, a news clip, a meme) and ask for personal connections\n\u2022 Require responses that directly engage with specific classmates\u2019 posts by name\n\u2022 Ask for connections between course material and students\u2019 own lived experience\n\u2022 Make the prompt weird — specificity and personality are your friends",
+    next: "process_intro",
+  },
+  strategy_research: {
+    type: "message",
+    content: "Research projects have a built-in AI-resistance feature: process documentation.\n\nAI can generate a polished final product. It cannot generate the authentic journey of finding, evaluating, and wrestling with sources over time.\n\nSome concrete moves:\n\u2022 Require an annotated research log with dated entries showing how their thinking evolved\n\u2022 Build in checkpoints: topic proposal \u2192 annotated bibliography \u2192 rough draft \u2192 reflection \u2192 final\n\u2022 Have students present their research journey to the class, not just findings\n\u2022 Ask them to include a \u201Cdead ends\u201D section — sources or angles that didn\u2019t work out and why\n\u2022 Require at least one source that can\u2019t be found via Google (interview, campus resource, physical archive)",
+    next: "process_intro",
+  },
+  process_intro: {
+    type: "question",
+    prompt: "Here\u2019s the bigger shift. Instead of policing the product, you assess the process. Which of these feels most doable for you right now?",
+    options: [
+      { label: "Adding a reflection component to existing assignments", next: "tactic_reflection" },
+      { label: "Building in scaffolded stages / checkpoints", next: "tactic_scaffolding" },
+      { label: "Incorporating personal or class-specific elements", next: "tactic_personal" },
+      { label: "Having honest conversations with students about AI", next: "tactic_conversation" },
+    ],
+  },
+  tactic_reflection: {
+    type: "message",
+    content: "This is the lowest-lift, highest-impact move you can make.\n\nAfter any assignment, ask students to write a short reflection:\n\n\u2022 What was the hardest part of this assignment?\n\u2022 What did you change between your first attempt and your final version, and why?\n\u2022 What do you understand now that you didn\u2019t before?\n\nThese are nearly impossible to fake with AI because they require authentic metacognition about a specific experience. And they give you a window into whether learning actually happened — which is what you cared about in the first place.",
+    next: "ai_policy",
+  },
+  tactic_scaffolding: {
+    type: "message",
+    content: "Scaffolding is powerful because it makes the process visible — and AI-generated work becomes obvious when there\u2019s no coherent thread between stages.\n\nResearch on student perceptions shows many students view AI use differently depending on the task — and scaffolding helps clarify those boundaries. <span class=\"citation\">[9]</span>\n\nA simple scaffolding sequence:\n1. Brainstorm / topic exploration (low stakes, messy is fine)\n2. Draft with instructor or peer feedback\n3. Revision with a memo explaining what changed and why\n4. Final submission\n\nWhen you can see the evolution of thinking across stages, you don\u2019t need a detection tool. The work either shows growth or it doesn\u2019t. And students who engage with each stage are doing the learning regardless of what tools they use along the way.",
+    next: "ai_policy",
+  },
+  tactic_personal: {
+    type: "message",
+    content: "This is where AI hits a wall. It\u2019s trained on the internet — it doesn\u2019t know your classroom.\n\nWays to make assignments AI-resistant through specificity:\n\n\u2022 Reference shared class experiences: \u201CUsing the concept we explored in Tuesday\u2019s activity...\u201D\n\u2022 Require personal narrative: \u201CConnect this theme to a specific moment in your own life\u201D\n\u2022 Use rotating, ephemeral prompts: a song, a local news story, a campus event\n\u2022 Ask students to build on their OWN previous work in the course\n\nThe more your assignments are rooted in the specific, lived experience of your class, the less useful AI becomes — not because you\u2019ve outsmarted it, but because you\u2019ve made the assignment about something it simply doesn\u2019t have access to.",
+    next: "ai_policy",
+  },
+  tactic_conversation: {
+    type: "message",
+    content: "This might be the most underrated strategy of all.\n\nStudents aren\u2019t evil. Research shows most of them use AI because they\u2019re overwhelmed, underprepared, or unclear about expectations — not because they want to cheat. <span class=\"citation\">[3, 4, 5]</span> An honest conversation early in the semester can transform the dynamic.\n\nThings worth saying out loud:\n\u2022 \u201CI know these tools exist. Let\u2019s talk about them.\u201D\n\u2022 \u201CHere\u2019s what I\u2019m actually trying to teach you, and here\u2019s why AI can\u2019t do that for you.\u201D\n\u2022 \u201CHere\u2019s when I think AI could be a useful tool, and here\u2019s when it undermines your learning.\u201D\n\u2022 \u201CI\u2019d rather you come to me struggling than hand in something that isn\u2019t yours.\u201D\n\nTransparency builds trust. Trust reduces the motivation to cheat. It\u2019s that simple.",
+    next: "ai_policy",
+  },
+  ai_policy: {
+    type: "question",
+    prompt: "Last question. What kind of AI policy feels right for your classroom?",
+    options: [
+      { label: "No AI use — I want fully human work", next: "policy_none" },
+      { label: "Limited use — maybe for brainstorming but not drafting", next: "policy_limited" },
+      { label: "Open use — but with transparency requirements", next: "policy_open" },
+      { label: "I honestly don\u2019t know yet", next: "policy_unsure" },
+    ],
+  },
+  policy_none: {
+    type: "message",
+    content: "That\u2019s a legitimate choice — and it\u2019s easier to enforce than you think, as long as you pair it with AI-resistant assignment design.\n\nThe key: your policy is only as strong as your pedagogy. If the assignment can be done by AI, banning AI creates an honor system. If the assignment can\u2019t meaningfully be done by AI, the ban is just a formality.\n\nPair your policy with:\n\u2726 Assignments that require personal specificity\n\u2726 Process documentation (drafts, reflections)\n\u2726 In-class components that connect to out-of-class work\n\nAnd frame it positively: \u201CThis course develops YOUR voice and YOUR thinking — and that requires doing the work yourself.\u201D",
+    next: "closing",
+  },
+  policy_limited: {
+    type: "message",
+    content: "This is where a lot of faculty land, and it can work beautifully — with clear boundaries. Studies from elite colleges show that students are already using AI in nuanced ways — for brainstorming, editing, and conceptual understanding — so a bounded policy often matches their actual behavior. <span class=\"citation\">[10]</span>\n\nA framework that works:\n\u2022 AI is fine for: brainstorming, outlining, checking grammar, explaining concepts you\u2019re stuck on\n\u2022 AI is not fine for: generating draft text, writing conclusions, producing content you submit as your own\n\u2022 The rule: if AI shaped your thinking, that\u2019s learning. If AI replaced your thinking, that\u2019s a problem.\n\nRequire a brief \u201CAI use disclosure\u201D with submissions — not as a gotcha, but as a norm. \u201CDid you use any AI tools? If so, how?\u201D This normalizes honesty and gives you useful data about how students are actually working.",
+    next: "closing",
+  },
+  policy_open: {
+    type: "message",
+    content: "Bold — and increasingly the direction higher ed is heading. Research shows the majority of students are already using generative AI for schoolwork <span class=\"citation\">[7]</span>, and global surveys indicate students want clear guidance, not silence. <span class=\"citation\">[4]</span> The key is making transparency non-negotiable.\n\nA framework for open AI use:\n\u2022 Students must disclose what tools they used and how\n\u2022 Students must be able to explain and defend every element of their work\n\u2022 Assessment shifts toward process, reflection, and oral defense\n\u2022 The learning objectives focus on critical thinking, synthesis, and application — things AI can assist with but not replace\n\nThis approach treats AI as a professional tool and teaches students to use it ethically — which, honestly, is a skill they\u2019ll need. Just make sure your assignments still require genuine cognitive engagement, not just prompt engineering.",
+    next: "closing",
+  },
+  policy_unsure: {
+    type: "message",
+    content: "That\u2019s completely okay. You don\u2019t need a perfect policy on day one.\n\nHere\u2019s a starting point that buys you time while keeping things honest:\n\n\u201CAI tools are evolving fast, and so is my thinking about them. For now, here\u2019s where I stand: [your current boundary]. I may adjust this as we go. What I ask is that you\u2019re always honest with me about how you\u2019re working. I\u2019d rather have that conversation than play detective.\u201D\n\nThat\u2019s it. That\u2019s a policy. It\u2019s human, it\u2019s flexible, and it invites students into the process rather than setting up a surveillance dynamic.\n\nYou can refine it as you learn what works for your specific students and discipline.",
+    next: "closing",
+  },
+  closing: { type: "closing" },
+};
+
+const REFERENCES = [
+  { num: 1, text: "Weber-Wulff, D., Anohina-Naumeca, A., Bjelobaba, S., Folt\u00FDnek, T., Guerrero-Dib, J., Popoola, O., \u0160igut, P., & Waddington, L. (2023). Testing of detection tools for AI-generated text. International Journal of Educational Integrity, 19, Article 26." },
+  { num: 2, text: "Yildiz, F. E., Karaarslan, E., & Ayd\u0131n, \u00D6. (2025). Evaluating the accuracy of AI content detectors. In \u00D6. Ayd\u0131n & E. Karaarslan (Eds.), The Age of Generative Artificial Intelligence (pp. 143\u2013155). Izmir Academy Association." },
+  { num: 3, text: "Balabdaoui, F., Dittmann-Domenichini, N., Grosse, H., Schlienger, C., & Kortemeyer, G. (2024). A survey on students\u2019 use of AI at a technical university. Discover Education, 3, Article 51." },
+  { num: 4, text: "Digital Education Council. (2024, August 7). What students want: Key results from DEC Global AI Student Survey 2024." },
+  { num: 5, text: "Nagelhout, R. (2024, September 10). Students are using AI already: Here\u2019s what they think adults should know. Harvard Graduate School of Education, Usable Knowledge." },
+  { num: 6, text: "Bloom\u2019s Taxonomy Revisited (Version 2.0). Oregon State University Ecampus, 2024. CC BY-NC 4.0." },
+  { num: 7, text: "College Board. (2025, October 6). New research: Majority of high school students use generative AI for schoolwork." },
+  { num: 8, text: "O\u2019Connell, D. (2025, July 14). How are students really using AI? The Chronicle of Higher Education." },
+  { num: 9, text: "Lund, B. D., Lee, T. H., Mannuru, N. R., & Arutla, N. (2025). AI and academic integrity: Exploring student perceptions and implications for higher education. Journal of Academic Ethics, 23, 1545\u20131565." },
+  { num: 10, text: "Reyes, G., & Contractor, Z. (2025, August 1). Generative AI in higher education: Evidence from an elite college. SSRN." },
+];
+
+// State
+let history = ["welcome"];
+let selections = {};
+
+function render() {
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+  history.forEach((stepId, idx) => {
+    const isLatest = idx === history.length - 1;
+    const el = renderStep(stepId, isLatest);
+    if (el) app.appendChild(el);
+  });
+  // Scroll to bottom
+  setTimeout(() => {
+    const lastStep = app.lastElementChild;
+    if (lastStep) lastStep.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, 50);
+}
+
+function renderContent(html) {
+  // Process the content string into formatted HTML
+  const lines = html.split("\n");
+  let result = "";
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed === "") {
+      result += '<div class="spacer"></div>';
+    } else if (trimmed.startsWith("\u2022") || trimmed.startsWith("\u2726")) {
+      result += '<div class="bullet">' + trimmed + '</div>';
+    } else if (/^\d+\./.test(trimmed)) {
+      result += '<div class="bullet">' + trimmed + '</div>';
+    } else if (trimmed.startsWith("\u2192")) {
+      result += '<div class="arrow">' + trimmed + '</div>';
+    } else {
+      result += '<p>' + trimmed + '</p>';
+    }
+  }
+  return result;
+}
+
+function renderStep(stepId, isLatest) {
+  const step = STEPS[stepId];
+  if (!step) return null;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "step";
+
+  if (step.type === "intro") {
+    wrapper.innerHTML = `
+      <div class="intro">
+        <div class="badge">Interactive Guide</div>
+        <h1>Teaching, Not Policing</h1>
+        <p class="subtitle">Moving Beyond AI Detection in Academic Integrity</p>
+        <div class="divider"></div>
+        <p class="intro-text">
+          You don\u2019t need to become an AI expert. You don\u2019t need detection tools.
+          You need a few practical shifts in how you think about your classroom.
+          This guide will walk you through it — at your pace, based on your situation.
+          Grounded in current research on AI in higher education. <span class="citation">[5, 8]</span>
+        </p>
+        <button class="btn-primary" onclick="goTo('feeling')">Let\u2019s start \u2192</button>
+      </div>
+    `;
+  } else if (step.type === "question") {
+    const selected = selections[stepId];
+    let optionsHtml = "";
+    for (const opt of step.options) {
+      const isSelected = selected === opt.label;
+      const isOther = selected && !isSelected;
+      const cls = isSelected ? "option-btn selected" : isOther ? "option-btn dimmed" : "option-btn";
+      const onclick = selected ? "" : `onclick="selectOption('${stepId}', '${opt.label.replace(/'/g, "\\'")}', '${opt.next}')"`;
+      optionsHtml += `<button class="${cls}" ${onclick}>${opt.label}</button>`;
+    }
+    wrapper.innerHTML = `
+      <div class="question-block">
+        <p class="question-prompt">${step.prompt}</p>
+        <div class="options">${optionsHtml}</div>
+      </div>
+    `;
+  } else if (step.type === "message") {
+    const continueBtn = isLatest && step.next
+      ? `<button class="btn-continue" onclick="goTo('${step.next}')">Continue \u2192</button>`
+      : "";
+    wrapper.innerHTML = `
+      <div class="message-card">
+        <div>${renderContent(step.content)}</div>
+        ${continueBtn}
+      </div>
+    `;
+  } else if (step.type === "closing") {
+    let refsHtml = "";
+    for (const ref of REFERENCES) {
+      refsHtml += `<p class="ref-entry"><span class="ref-num">[${ref.num}]</span> ${ref.text}</p>`;
+    }
+    wrapper.innerHTML = `
+      <div class="closing">
+        <div class="check-circle">\u2713</div>
+        <h2>You\u2019ve got this.</h2>
+        <p class="closing-text">
+          You don\u2019t need to solve AI in academia today. You just need to take
+          one step: pick one assignment, make one change, and see what happens.
+        </p>
+        <p class="closing-text" style="margin-bottom: 0;">
+          The goal was never to catch students. It was always to teach them.
+        </p>
+        <div class="checklist-box">
+          <div class="checklist-label">Your Monday morning checklist</div>
+          <div class="checklist-item">\u2610 Pick one upcoming assignment to redesign</div>
+          <div class="checklist-item">\u2610 Add a personal or class-specific element</div>
+          <div class="checklist-item">\u2610 Include a reflection component</div>
+          <div class="checklist-item">\u2610 Have an honest conversation with your students about AI</div>
+          <div class="checklist-item">\u2610 Breathe. You\u2019re already doing better than you think.</div>
+        </div>
+        <button class="btn-reset" onclick="resetGuide()">Start over with different choices</button>
+        <p class="credit">
+          Based on \u201CTeaching, Not Policing: Moving Beyond AI Detection in Academic Integrity\u201D<br>
+          Lauren B. Schwartz \u00B7 Salem Community College
+        </p>
+        <details class="references-toggle">
+          <summary>\u25BE Sources & References</summary>
+          <div class="references-box">${refsHtml}</div>
+        </details>
+      </div>
+    `;
+  }
+
+  return wrapper;
+}
+
+function goTo(stepId) {
+  history.push(stepId);
+  render();
+}
+
+function selectOption(stepId, label, next) {
+  selections[stepId] = label;
+  history.push(next);
+  render();
+}
+
+function resetGuide() {
+  history = ["welcome"];
+  selections = {};
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Initial render
+render();
+</script>
+</body>
+</html>
