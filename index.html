@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,385 +9,546 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #0c1220;
-    --card: #141e30;
-    --card-border: #1e2d45;
-    --accent: #e8a838;
-    --accent-glow: rgba(232, 168, 56, 0.15);
-    --accent-soft: #d4943a;
-    --text: #e2e0dc;
-    --text-muted: #8a9ab5;
-    --text-dim: #5a6a82;
-    --btn-bg: #1a2a42;
-    --btn-hover: #243550;
-    --btn-border: #2a3f5e;
-    --success: #4ecca3;
-    --success-glow: rgba(78, 204, 163, 0.12);
-  }
+:root {
+–bg: #0c1220;
+–card: #141e30;
+–card-border: #1e2d45;
+–accent: #e8a838;
+–accent-glow: rgba(232, 168, 56, 0.15);
+–accent-soft: #d4943a;
+–text: #e8e6e2;
+–text-muted: #a0b0c8;
+–text-dim: #708098;
+–btn-bg: #1a2a42;
+–btn-hover: #243550;
+–btn-border: #2a3f5e;
+–success: #4ecca3;
+–success-glow: rgba(78, 204, 163, 0.12);
+–focus-ring: #e8a838;
+}
 
-  body {
-    min-height: 100vh;
-    background: var(--bg);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    color: var(--text);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+body {
+min-height: 100vh;
+background: var(–bg);
+font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, Roboto, sans-serif;
+color: var(–text);
+line-height: 1.6;
+font-size: 1rem;
+-webkit-font-smoothing: antialiased;
+}
 
-  .container {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 48px 24px 80px;
-  }
+/* Skip link */
+.skip-link {
+position: absolute;
+top: -100px;
+left: 0;
+background: var(–accent);
+color: var(–bg);
+padding: 0.75rem 1.5rem;
+z-index: 1000;
+font-weight: 700;
+text-decoration: none;
+border-radius: 0 0 0.5rem 0;
+}
+.skip-link:focus {
+top: 0;
+}
 
-  .step {
-    opacity: 0;
-    transform: translateY(16px);
-    animation: fadeIn 0.5s ease forwards;
-  }
+/* Focus styles */
+*:focus-visible {
+outline: 3px solid var(–focus-ring);
+outline-offset: 3px;
+}
 
-  @keyframes fadeIn {
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+.step { animation: none !important; opacity: 1 !important; transform: none !important; }
+*, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
 
-  /* Intro */
-  .intro { margin-bottom: 40px; text-align: center; }
+.container {
+max-width: 40rem;
+margin: 0 auto;
+padding: 3rem 1.5rem 5rem;
+}
 
-  .badge {
-    display: inline-block;
-    padding: 6px 16px;
-    border-radius: 20px;
-    background: var(--accent-glow);
-    border: 1px solid rgba(232, 168, 56, 0.27);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 24px;
-    font-family: 'JetBrains Mono', monospace;
-  }
+.step {
+opacity: 0;
+transform: translateY(1rem);
+animation: fadeIn 0.5s ease forwards;
+}
 
-  .intro h1 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(28px, 5vw, 42px);
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.2;
-    margin-bottom: 8px;
-  }
+@keyframes fadeIn {
+to { opacity: 1; transform: translateY(0); }
+}
 
-  .intro .subtitle {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(16px, 3vw, 21px);
-    color: var(--accent);
-    font-style: italic;
-    font-weight: 400;
-    margin-bottom: 32px;
-  }
+/* Visually hidden but accessible to screen readers */
+.sr-only {
+position: absolute;
+width: 1px;
+height: 1px;
+padding: 0;
+margin: -1px;
+overflow: hidden;
+clip: rect(0, 0, 0, 0);
+white-space: nowrap;
+border-width: 0;
+}
 
-  .divider {
-    width: 60px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    margin: 0 auto 32px;
-  }
+/* Intro */
+.intro { margin-bottom: 2.5rem; text-align: center; }
 
-  .intro-text {
-    font-size: 16px;
-    color: var(--text-muted);
-    line-height: 1.7;
-    max-width: 520px;
-    margin: 0 auto 36px;
-  }
+.badge {
+display: inline-block;
+padding: 0.375rem 1rem;
+border-radius: 1.25rem;
+background: var(–accent-glow);
+border: 1px solid rgba(232, 168, 56, 0.27);
+color: var(–accent);
+font-size: 0.75rem;
+font-weight: 600;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+margin-bottom: 1.5rem;
+font-family: ‘JetBrains Mono’, monospace;
+}
 
-  /* Buttons */
-  .btn-primary {
-    background: linear-gradient(135deg, var(--accent), var(--accent-soft));
-    color: var(--bg);
-    border: none;
-    padding: 14px 36px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.3px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 20px rgba(232, 168, 56, 0.2);
-  }
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 28px rgba(232, 168, 56, 0.33);
-  }
+.intro h1 {
+font-family: ‘Playfair Display’, Georgia, serif;
+font-size: clamp(1.75rem, 5vw, 2.625rem);
+font-weight: 700;
+color: var(–text);
+line-height: 1.2;
+margin-bottom: 0.5rem;
+}
 
-  .btn-continue {
-    background: transparent;
-    border: 1px solid rgba(232, 168, 56, 0.33);
-    color: var(--accent);
-    padding: 10px 24px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: all 0.25s;
-  }
-  .btn-continue:hover {
-    background: var(--accent-glow);
-    border-color: var(--accent);
-  }
+.intro .subtitle {
+font-family: ‘Playfair Display’, Georgia, serif;
+font-size: clamp(1rem, 3vw, 1.3125rem);
+color: var(–accent);
+font-style: italic;
+font-weight: 400;
+margin-bottom: 2rem;
+}
 
-  .btn-reset {
-    background: transparent;
-    border: 1px solid var(--text-dim);
-    color: var(--text-muted);
-    padding: 10px 24px;
-    border-radius: 6px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.25s;
-  }
-  .btn-reset:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
+.divider {
+width: 3.75rem;
+height: 2px;
+background: linear-gradient(90deg, transparent, var(–accent), transparent);
+margin: 0 auto 2rem;
+}
+.divider[aria-hidden=“true”] { /* decorative */ }
 
-  /* Questions */
-  .question-prompt {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.6;
-    margin-bottom: 20px;
-    font-family: 'Playfair Display', Georgia, serif;
-  }
+.intro-text {
+font-size: 1rem;
+color: var(–text-muted);
+line-height: 1.7;
+max-width: 32.5rem;
+margin: 0 auto 2.25rem;
+}
 
-  .options { display: flex; flex-direction: column; gap: 10px; }
+/* Buttons */
+.btn-primary {
+background: linear-gradient(135deg, var(–accent), var(–accent-soft));
+color: var(–bg);
+border: none;
+padding: 0.875rem 2.25rem;
+border-radius: 0.5rem;
+font-size: 0.9375rem;
+font-weight: 700;
+cursor: pointer;
+letter-spacing: 0.02em;
+transition: transform 0.2s, box-shadow 0.2s;
+box-shadow: 0 4px 20px rgba(232, 168, 56, 0.2);
+}
+.btn-primary:hover, .btn-primary:focus-visible {
+transform: translateY(-2px);
+box-shadow: 0 6px 28px rgba(232, 168, 56, 0.33);
+}
 
-  .option-btn {
-    background: var(--btn-bg);
-    border: 1px solid var(--btn-border);
-    border-radius: 8px;
-    padding: 14px 20px;
-    text-align: left;
-    cursor: pointer;
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.5;
-    transition: all 0.25s ease;
-    font-family: inherit;
-    width: 100%;
-  }
-  .option-btn:hover:not(.selected):not(.dimmed) {
-    background: var(--btn-hover);
-    border-color: rgba(232, 168, 56, 0.27);
-  }
-  .option-btn.selected {
-    background: var(--accent-glow);
-    border-color: rgba(232, 168, 56, 0.4);
-    color: var(--accent);
-    font-weight: 600;
-    cursor: default;
-  }
-  .option-btn.dimmed {
-    opacity: 0.4;
-    color: var(--text-dim);
-    cursor: default;
-  }
+.btn-continue {
+background: transparent;
+border: 2px solid rgba(232, 168, 56, 0.5);
+color: var(–accent);
+padding: 0.625rem 1.5rem;
+border-radius: 0.375rem;
+font-size: 0.875rem;
+font-weight: 600;
+cursor: pointer;
+margin-top: 1.25rem;
+transition: all 0.25s;
+}
+.btn-continue:hover, .btn-continue:focus-visible {
+background: var(–accent-glow);
+border-color: var(–accent);
+}
 
-  /* Message cards */
-  .message-card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 24px 28px;
-    margin-bottom: 28px;
-    border-left: 3px solid rgba(232, 168, 56, 0.33);
-  }
+.btn-reset {
+background: transparent;
+border: 2px solid var(–text-dim);
+color: var(–text-muted);
+padding: 0.625rem 1.5rem;
+border-radius: 0.375rem;
+font-size: 0.8125rem;
+cursor: pointer;
+transition: all 0.25s;
+}
+.btn-reset:hover, .btn-reset:focus-visible {
+border-color: var(–accent);
+color: var(–accent);
+}
 
-  .message-card p {
-    margin: 0 0 10px;
-    line-height: 1.7;
-    font-size: 15px;
-  }
+/* Questions */
+.question-prompt {
+font-size: 1.0625rem;
+font-weight: 600;
+color: var(–text);
+line-height: 1.6;
+margin-bottom: 1.25rem;
+font-family: ‘Playfair Display’, Georgia, serif;
+}
 
-  .message-card .bullet {
-    padding-left: 20px;
-    margin-bottom: 6px;
-    line-height: 1.65;
-    font-size: 15px;
-  }
+.options {
+display: flex;
+flex-direction: column;
+gap: 0.625rem;
+}
 
-  .message-card .arrow {
-    color: var(--accent);
-    font-weight: 600;
-    font-size: 17px;
-    margin: 12px 0;
-    line-height: 1.5;
-  }
+.option-btn {
+background: var(–btn-bg);
+border: 2px solid var(–btn-border);
+border-radius: 0.5rem;
+padding: 0.875rem 1.25rem;
+text-align: left;
+cursor: pointer;
+color: var(–text);
+font-size: 0.9375rem;
+line-height: 1.5;
+transition: all 0.25s ease;
+font-family: inherit;
+width: 100%;
+position: relative;
+}
+.option-btn:hover:not([aria-disabled=“true”]) {
+background: var(–btn-hover);
+border-color: rgba(232, 168, 56, 0.4);
+}
+.option-btn[aria-pressed=“true”] {
+background: var(–accent-glow);
+border-color: var(–accent);
+color: var(–accent);
+font-weight: 600;
+cursor: default;
+padding-left: 2.5rem;
+}
+.option-btn[aria-pressed=“true”]::before {
+content: “\2713”;
+position: absolute;
+left: 0.875rem;
+top: 50%;
+transform: translateY(-50%);
+font-weight: 700;
+font-size: 1rem;
+}
+.option-btn[aria-disabled=“true”]:not([aria-pressed=“true”]) {
+opacity: 0.35;
+color: var(–text-dim);
+cursor: default;
+}
 
-  .spacer { height: 12px; }
+/* Message cards */
+.message-card {
+background: var(–card);
+border: 1px solid var(–card-border);
+border-radius: 0.75rem;
+padding: 1.5rem 1.75rem;
+margin-bottom: 1.75rem;
+border-left: 3px solid rgba(232, 168, 56, 0.4);
+}
 
-  .citation {
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 600;
-    font-family: 'JetBrains Mono', monospace;
-    opacity: 0.8;
-  }
+.message-card p {
+margin: 0 0 0.625rem;
+line-height: 1.7;
+font-size: 0.9375rem;
+}
 
-  /* Closing */
-  .closing { text-align: center; padding: 40px 20px; margin-top: 10px; }
+.message-card .bullet-list {
+list-style: none;
+padding: 0;
+margin: 0.25rem 0;
+}
 
-  .check-circle {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--success-glow);
-    border: 2px solid rgba(78, 204, 163, 0.27);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 24px;
-    font-size: 28px;
-  }
+.message-card .bullet-list li {
+padding-left: 1.5rem;
+margin-bottom: 0.375rem;
+line-height: 1.65;
+font-size: 0.9375rem;
+position: relative;
+}
 
-  .closing h2 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 16px;
-  }
+.message-card .bullet-list li::before {
+content: “\2022”;
+position: absolute;
+left: 0.375rem;
+color: var(–accent);
+}
 
-  .closing .closing-text {
-    color: var(--text-muted);
-    font-size: 15px;
-    line-height: 1.7;
-    max-width: 480px;
-    margin: 0 auto 12px;
-  }
+.message-card .bullet-list.star li::before {
+content: “\2726”;
+}
 
-  .checklist-box {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 10px;
-    padding: 20px 24px;
-    max-width: 420px;
-    margin: 32px auto;
-    text-align: left;
-  }
+.message-card .numbered-list {
+list-style: none;
+padding: 0;
+margin: 0.25rem 0;
+counter-reset: step-counter;
+}
 
-  .checklist-label {
-    color: var(--accent);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    font-family: 'JetBrains Mono', monospace;
-  }
+.message-card .numbered-list li {
+padding-left: 1.75rem;
+margin-bottom: 0.375rem;
+line-height: 1.65;
+font-size: 0.9375rem;
+position: relative;
+counter-increment: step-counter;
+}
 
-  .checklist-item {
-    font-size: 14px;
-    line-height: 1.8;
-  }
+.message-card .numbered-list li::before {
+content: counter(step-counter) “.”;
+position: absolute;
+left: 0;
+color: var(–accent);
+font-weight: 600;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 0.8125rem;
+}
 
-  .credit {
-    color: var(--text-dim);
-    font-size: 13px;
-    margin-top: 32px;
-    font-style: italic;
-  }
+.message-card .arrow-text {
+color: var(–accent);
+font-weight: 600;
+font-size: 1.0625rem;
+margin: 0.75rem 0;
+line-height: 1.5;
+}
 
-  /* References */
-  .references-toggle {
-    margin-top: 32px;
-    text-align: left;
-    max-width: 540px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+.spacer { height: 0.75rem; }
 
-  .references-toggle summary {
-    color: var(--text-muted);
-    font-size: 13px;
-    cursor: pointer;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    font-family: 'JetBrains Mono', monospace;
-    text-align: center;
-    list-style: none;
-    padding: 8px 0;
-  }
-  .references-toggle summary::-webkit-details-marker { display: none; }
+.citation {
+color: var(–accent);
+font-size: 0.75rem;
+font-weight: 600;
+font-family: ‘JetBrains Mono’, monospace;
+opacity: 0.85;
+}
 
-  .references-box {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 10px;
-    padding: 20px 24px;
-    margin-top: 12px;
-  }
+/* Closing */
+.closing { text-align: center; padding: 2.5rem 1.25rem; margin-top: 0.625rem; }
 
-  .ref-entry {
-    font-size: 12px;
-    line-height: 1.65;
-    color: var(--text-muted);
-    margin-bottom: 10px;
-    padding-left: 24px;
-    text-indent: -24px;
-  }
+.check-circle {
+width: 3.75rem;
+height: 3.75rem;
+border-radius: 50%;
+background: var(–success-glow);
+border: 2px solid rgba(78, 204, 163, 0.35);
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 0 auto 1.5rem;
+font-size: 1.75rem;
+color: var(–success);
+}
 
-  .ref-num {
-    color: var(--accent);
-    font-weight: 600;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-  }
+.closing h2 {
+font-family: ‘Playfair Display’, Georgia, serif;
+font-size: 1.625rem;
+font-weight: 700;
+margin-bottom: 1rem;
+}
 
-  .question-block { margin-bottom: 32px; }
+.closing .closing-text {
+color: var(–text-muted);
+font-size: 0.9375rem;
+line-height: 1.7;
+max-width: 30rem;
+margin: 0 auto 0.75rem;
+}
+
+.checklist-box {
+background: var(–card);
+border: 1px solid var(–card-border);
+border-radius: 0.625rem;
+padding: 1.25rem 1.5rem;
+max-width: 26.25rem;
+margin: 2rem auto;
+text-align: left;
+}
+
+.checklist-label {
+color: var(–accent);
+font-size: 0.8125rem;
+font-weight: 700;
+letter-spacing: 0.065em;
+text-transform: uppercase;
+margin-bottom: 0.75rem;
+font-family: ‘JetBrains Mono’, monospace;
+}
+
+.checklist {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+
+.checklist li {
+font-size: 0.875rem;
+line-height: 1.8;
+padding-left: 1.75rem;
+position: relative;
+}
+
+.checklist li::before {
+content: “\2610”;
+position: absolute;
+left: 0;
+font-size: 1rem;
+}
+
+.credit {
+color: var(–text-dim);
+font-size: 0.8125rem;
+margin-top: 2rem;
+font-style: italic;
+}
+
+/* References */
+.references-toggle {
+margin-top: 2rem;
+text-align: left;
+max-width: 33.75rem;
+margin-left: auto;
+margin-right: auto;
+}
+
+.references-toggle summary {
+color: var(–text-muted);
+font-size: 0.8125rem;
+cursor: pointer;
+font-weight: 600;
+letter-spacing: 0.04em;
+text-transform: uppercase;
+font-family: ‘JetBrains Mono’, monospace;
+text-align: center;
+padding: 0.5rem 0;
+}
+
+.references-box {
+background: var(–card);
+border: 1px solid var(–card-border);
+border-radius: 0.625rem;
+padding: 1.25rem 1.5rem;
+margin-top: 0.75rem;
+}
+
+.ref-list {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+
+.ref-list li {
+font-size: 0.75rem;
+line-height: 1.65;
+color: var(–text-muted);
+margin-bottom: 0.625rem;
+padding-left: 1.5rem;
+text-indent: -1.5rem;
+}
+
+.ref-num {
+color: var(–accent);
+font-weight: 600;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 0.6875rem;
+}
+
+.question-block { margin-bottom: 2rem; }
+
+/* Live region for screen reader announcements */
+.live-region {
+position: absolute;
+width: 1px;
+height: 1px;
+padding: 0;
+margin: -1px;
+overflow: hidden;
+clip: rect(0, 0, 0, 0);
+white-space: nowrap;
+border-width: 0;
+}
 </style>
+
 </head>
 <body>
-<div class="container" id="app"></div>
+
+<a href="#main-content" class="skip-link">Skip to guide content</a>
+
+<!-- Screen reader announcements -->
+
+<div id="live-announcements" class="live-region" aria-live="polite" aria-atomic="true" role="status"></div>
+
+<main id="main-content" class="container" role="main" aria-label="Teaching, Not Policing interactive guide">
+  <div id="app"></div>
+</main>
 
 <script>
 const STEPS = {
-  welcome: { type: "intro" },
+  welcome: { type: "intro", section: "Introduction" },
   feeling: {
     type: "question",
-    prompt: "First — no judgment here. When you think about students using AI in your class, what\u2019s your gut reaction?",
+    section: "Getting Started",
+    prompt: "First \u2014 no judgment here. When you think about students using AI in your class, what\u2019s your gut reaction?",
     options: [
-      { label: "Frustrated — it feels like cheating", next: "validate_frustrated" },
-      { label: "Overwhelmed — I don\u2019t even know where to start", next: "validate_overwhelmed" },
-      { label: "Curious — but unsure how to handle it", next: "validate_curious" },
-      { label: "Defeated — I can\u2019t compete with this", next: "validate_defeated" },
+      { label: "Frustrated \u2014 it feels like cheating", next: "validate_frustrated" },
+      { label: "Overwhelmed \u2014 I don\u2019t even know where to start", next: "validate_overwhelmed" },
+      { label: "Curious \u2014 but unsure how to handle it", next: "validate_curious" },
+      { label: "Defeated \u2014 I can\u2019t compete with this", next: "validate_defeated" },
     ],
   },
   validate_frustrated: {
     type: "message",
-    content: "That frustration is completely valid. You designed your assignments with care, and it feels like AI lets students skip the learning you built into them. Here\u2019s the thing though — detection tools won\u2019t fix that feeling. They\u2019re unreliable <span class=\"citation\">[1, 2]</span>, they create adversarial dynamics with students, and they don\u2019t address the real problem. Let\u2019s talk about what actually works.",
+    section: "Getting Started",
+    content: [
+      { type: "p", text: "That frustration is completely valid. You designed your assignments with care, and it feels like AI lets students skip the learning you built into them. Here\u2019s the thing though \u2014 detection tools won\u2019t fix that feeling. They\u2019re unreliable <span class=\"citation\">[1, 2]</span>, they create adversarial dynamics with students, and they don\u2019t address the real problem. Let\u2019s talk about what actually works." },
+    ],
     next: "detection_question",
   },
   validate_overwhelmed: {
     type: "message",
-    content: "You\u2019re not behind. The landscape is shifting so fast that feeling overwhelmed is the only rational response. The good news? You don\u2019t need to become an AI expert. You just need a few practical shifts in how you think about your assignments. Let\u2019s walk through it.",
+    section: "Getting Started",
+    content: [
+      { type: "p", text: "You\u2019re not behind. The landscape is shifting so fast that feeling overwhelmed is the only rational response. The good news? You don\u2019t need to become an AI expert. You just need a few practical shifts in how you think about your assignments. Let\u2019s walk through it." },
+    ],
     next: "detection_question",
   },
   validate_curious: {
     type: "message",
-    content: "That curiosity is your biggest asset right now. A lot of faculty are stuck between panic and denial — the fact that you\u2019re here exploring means you\u2019re already ahead. Let\u2019s channel that curiosity into something concrete.",
+    section: "Getting Started",
+    content: [
+      { type: "p", text: "That curiosity is your biggest asset right now. A lot of faculty are stuck between panic and denial \u2014 the fact that you\u2019re here exploring means you\u2019re already ahead. Let\u2019s channel that curiosity into something concrete." },
+    ],
     next: "detection_question",
   },
   validate_defeated: {
     type: "message",
-    content: "I hear you. But here\u2019s something important: you have something AI genuinely cannot replicate — a relationship with your students, knowledge of their individual growth, and the ability to design experiences that matter to them personally. That\u2019s not a small thing. It\u2019s actually your whole strategy. Let me show you what I mean.",
+    section: "Getting Started",
+    content: [
+      { type: "p", text: "I hear you. But here\u2019s something important: you have something AI genuinely cannot replicate \u2014 a relationship with your students, knowledge of their individual growth, and the ability to design experiences that matter to them personally. That\u2019s not a small thing. It\u2019s actually your whole strategy. Let me show you what I mean." },
+    ],
     next: "detection_question",
   },
   detection_question: {
     type: "question",
+    section: "AI Detection Tools",
     prompt: "Have you used or considered using AI detection tools (like GPTZero or Turnitin\u2019s AI detector)?",
     options: [
       { label: "Yes, I\u2019m currently using one", next: "detection_reality" },
@@ -396,16 +558,30 @@ const STEPS = {
   },
   detection_reality: {
     type: "message",
-    content: "Here\u2019s what the research shows — and what a lot of vendors won\u2019t tell you:\n\n\u2022 Detection tools have significant false positive rates — independent studies show they frequently misidentify human-written text as AI-generated, particularly for non-native English speakers. <span class=\"citation\">[1, 2]</span>\n\n\u2022 They create an adversarial classroom dynamic. You become a detective instead of a teacher. Students become suspects instead of learners.\n\n\u2022 They\u2019re already being outpaced by newer AI models, and they always will be. It\u2019s an arms race you can\u2019t win. <span class=\"citation\">[1]</span>\n\n\u2022 Most importantly: even a \u201Ccorrect\u201D detection doesn\u2019t teach the student anything.\n\nThe alternative isn\u2019t to ignore AI. It\u2019s to design around it.",
+    section: "AI Detection Tools",
+    content: [
+      { type: "p", text: "Here\u2019s what the research shows \u2014 and what a lot of vendors won\u2019t tell you:" },
+      { type: "ul", items: [
+        "Detection tools have significant false positive rates \u2014 independent studies show they frequently misidentify human-written text as AI-generated, particularly for non-native English speakers. <span class=\"citation\">[1, 2]</span>",
+        "They create an adversarial classroom dynamic. You become a detective instead of a teacher. Students become suspects instead of learners.",
+        "They\u2019re already being outpaced by newer AI models, and they always will be. It\u2019s an arms race you can\u2019t win. <span class=\"citation\">[1]</span>",
+        "Most importantly: even a \u201Ccorrect\u201D detection doesn\u2019t teach the student anything.",
+      ]},
+      { type: "p", text: "The alternative isn\u2019t to ignore AI. It\u2019s to design around it." },
+    ],
     next: "assignment_type",
   },
   detection_skip: {
     type: "message",
-    content: "Good instinct. Your energy is better spent elsewhere. The real question isn\u2019t \u201Chow do I catch them?\u201D — it\u2019s \u201Chow do I make my assignments matter enough that AI can\u2019t do them?\u201D Let\u2019s get into that.",
+    section: "AI Detection Tools",
+    content: [
+      { type: "p", text: "Good instinct. Your energy is better spent elsewhere. The real question isn\u2019t \u201Chow do I catch them?\u201D \u2014 it\u2019s \u201Chow do I make my assignments matter enough that AI can\u2019t do them?\u201D Let\u2019s get into that." },
+    ],
     next: "assignment_type",
   },
   assignment_type: {
     type: "question",
+    section: "Assignment Strategies",
     prompt: "Think about your most common assignment. Which of these sounds closest?",
     options: [
       { label: "Essays or written analysis", next: "strategy_essays" },
@@ -416,26 +592,76 @@ const STEPS = {
   },
   strategy_essays: {
     type: "message",
-    content: "Essays are where faculty panic most about AI — but they\u2019re also where the strongest AI-resistant strategies live. The key principle:\n\n\u2192 Make it personal. Make it specific. Make it connected.\n\nAI can write a generic essay about symbolism in The Great Gatsby. It cannot write about how a specific passage connects to a moment in YOUR student\u2019s life, using references from YOUR class discussion last Tuesday, building on the thesis they workshopped with a peer.\n\nWhen you design prompts at higher levels of Bloom\u2019s Taxonomy — application, analysis, evaluation, creation — you\u2019re already moving into territory where AI struggles. <span class=\"citation\">[6]</span>\n\nSome concrete moves:\n\u2022 Require students to connect readings to personal experience or class-specific discussions\n\u2022 Use scaffolded drafts where each stage builds visibly on the last\n\u2022 Ask students to reflect on their OWN writing process — what they struggled with, what they changed and why\n\u2022 Design prompts that reference shared, ephemeral classroom moments",
+    section: "Assignment Strategies",
+    content: [
+      { type: "p", text: "Essays are where faculty panic most about AI \u2014 but they\u2019re also where the strongest AI-resistant strategies live. The key principle:" },
+      { type: "arrow", text: "\u2192 Make it personal. Make it specific. Make it connected." },
+      { type: "p", text: "AI can write a generic essay about symbolism in The Great Gatsby. It cannot write about how a specific passage connects to a moment in YOUR student\u2019s life, using references from YOUR class discussion last Tuesday, building on the thesis they workshopped with a peer." },
+      { type: "p", text: "When you design prompts at higher levels of Bloom\u2019s Taxonomy \u2014 application, analysis, evaluation, creation \u2014 you\u2019re already moving into territory where AI struggles. <span class=\"citation\">[6]</span>" },
+      { type: "p", text: "Some concrete moves:" },
+      { type: "ul", items: [
+        "Require students to connect readings to personal experience or class-specific discussions",
+        "Use scaffolded drafts where each stage builds visibly on the last",
+        "Ask students to reflect on their OWN writing process \u2014 what they struggled with, what they changed and why",
+        "Design prompts that reference shared, ephemeral classroom moments",
+      ]},
+    ],
     next: "process_intro",
   },
   strategy_technical: {
     type: "message",
-    content: "Technical work has a hidden advantage: you can assess process, not just product.\n\nAI can solve the problem. It often can\u2019t show the messy, human path to understanding.\n\nSome concrete moves:\n\u2022 Require students to document their problem-solving process — wrong turns included\n\u2022 Use oral components where students explain their reasoning live\n\u2022 Design multi-step problems where later stages depend on choices made earlier\n\u2022 Have students create the problems, not just solve them\n\u2022 Ask \u201Cwhere did you get stuck and how did you get unstuck?\u201D",
+    section: "Assignment Strategies",
+    content: [
+      { type: "p", text: "Technical work has a hidden advantage: you can assess process, not just product." },
+      { type: "p", text: "AI can solve the problem. It often can\u2019t show the messy, human path to understanding." },
+      { type: "p", text: "Some concrete moves:" },
+      { type: "ul", items: [
+        "Require students to document their problem-solving process \u2014 wrong turns included",
+        "Use oral components where students explain their reasoning live",
+        "Design multi-step problems where later stages depend on choices made earlier",
+        "Have students create the problems, not just solve them",
+        "Ask \u201Cwhere did you get stuck and how did you get unstuck?\u201D",
+      ]},
+    ],
     next: "process_intro",
   },
   strategy_discussion: {
     type: "message",
-    content: "Discussion posts are actually a great opportunity — because the best ones are inherently AI-resistant.\n\nThe trick: anchor them to something specific and immediate that AI doesn\u2019t have access to.\n\nSome concrete moves:\n\u2022 Tie prompts to that day\u2019s class experience — \u201Crespond to something a classmate said today that surprised you\u201D\n\u2022 Use media prompts that rotate frequently (a Song of the Day, a news clip, a meme) and ask for personal connections\n\u2022 Require responses that directly engage with specific classmates\u2019 posts by name\n\u2022 Ask for connections between course material and students\u2019 own lived experience\n\u2022 Make the prompt weird — specificity and personality are your friends",
+    section: "Assignment Strategies",
+    content: [
+      { type: "p", text: "Discussion posts are actually a great opportunity \u2014 because the best ones are inherently AI-resistant." },
+      { type: "p", text: "The trick: anchor them to something specific and immediate that AI doesn\u2019t have access to." },
+      { type: "p", text: "Some concrete moves:" },
+      { type: "ul", items: [
+        "Tie prompts to that day\u2019s class experience \u2014 \u201Crespond to something a classmate said today that surprised you\u201D",
+        "Use media prompts that rotate frequently (a Song of the Day, a news clip, a meme) and ask for personal connections",
+        "Require responses that directly engage with specific classmates\u2019 posts by name",
+        "Ask for connections between course material and students\u2019 own lived experience",
+        "Make the prompt weird \u2014 specificity and personality are your friends",
+      ]},
+    ],
     next: "process_intro",
   },
   strategy_research: {
     type: "message",
-    content: "Research projects have a built-in AI-resistance feature: process documentation.\n\nAI can generate a polished final product. It cannot generate the authentic journey of finding, evaluating, and wrestling with sources over time.\n\nSome concrete moves:\n\u2022 Require an annotated research log with dated entries showing how their thinking evolved\n\u2022 Build in checkpoints: topic proposal \u2192 annotated bibliography \u2192 rough draft \u2192 reflection \u2192 final\n\u2022 Have students present their research journey to the class, not just findings\n\u2022 Ask them to include a \u201Cdead ends\u201D section — sources or angles that didn\u2019t work out and why\n\u2022 Require at least one source that can\u2019t be found via Google (interview, campus resource, physical archive)",
+    section: "Assignment Strategies",
+    content: [
+      { type: "p", text: "Research projects have a built-in AI-resistance feature: process documentation." },
+      { type: "p", text: "AI can generate a polished final product. It cannot generate the authentic journey of finding, evaluating, and wrestling with sources over time." },
+      { type: "p", text: "Some concrete moves:" },
+      { type: "ul", items: [
+        "Require an annotated research log with dated entries showing how their thinking evolved",
+        "Build in checkpoints: topic proposal \u2192 annotated bibliography \u2192 rough draft \u2192 reflection \u2192 final",
+        "Have students present their research journey to the class, not just findings",
+        "Ask them to include a \u201Cdead ends\u201D section \u2014 sources or angles that didn\u2019t work out and why",
+        "Require at least one source that can\u2019t be found via Google (interview, campus resource, physical archive)",
+      ]},
+    ],
     next: "process_intro",
   },
   process_intro: {
     type: "question",
+    section: "Practical Tactics",
     prompt: "Here\u2019s the bigger shift. Instead of policing the product, you assess the process. Which of these feels most doable for you right now?",
     options: [
       { label: "Adding a reflection component to existing assignments", next: "tactic_reflection" },
@@ -446,55 +672,140 @@ const STEPS = {
   },
   tactic_reflection: {
     type: "message",
-    content: "This is the lowest-lift, highest-impact move you can make.\n\nAfter any assignment, ask students to write a short reflection:\n\n\u2022 What was the hardest part of this assignment?\n\u2022 What did you change between your first attempt and your final version, and why?\n\u2022 What do you understand now that you didn\u2019t before?\n\nThese are nearly impossible to fake with AI because they require authentic metacognition about a specific experience. And they give you a window into whether learning actually happened — which is what you cared about in the first place.",
+    section: "Practical Tactics",
+    content: [
+      { type: "p", text: "This is the lowest-lift, highest-impact move you can make." },
+      { type: "p", text: "After any assignment, ask students to write a short reflection:" },
+      { type: "ul", items: [
+        "What was the hardest part of this assignment?",
+        "What did you change between your first attempt and your final version, and why?",
+        "What do you understand now that you didn\u2019t before?",
+      ]},
+      { type: "p", text: "These are nearly impossible to fake with AI because they require authentic metacognition about a specific experience. And they give you a window into whether learning actually happened \u2014 which is what you cared about in the first place." },
+    ],
     next: "ai_policy",
   },
   tactic_scaffolding: {
     type: "message",
-    content: "Scaffolding is powerful because it makes the process visible — and AI-generated work becomes obvious when there\u2019s no coherent thread between stages.\n\nResearch on student perceptions shows many students view AI use differently depending on the task — and scaffolding helps clarify those boundaries. <span class=\"citation\">[9]</span>\n\nA simple scaffolding sequence:\n1. Brainstorm / topic exploration (low stakes, messy is fine)\n2. Draft with instructor or peer feedback\n3. Revision with a memo explaining what changed and why\n4. Final submission\n\nWhen you can see the evolution of thinking across stages, you don\u2019t need a detection tool. The work either shows growth or it doesn\u2019t. And students who engage with each stage are doing the learning regardless of what tools they use along the way.",
+    section: "Practical Tactics",
+    content: [
+      { type: "p", text: "Scaffolding is powerful because it makes the process visible \u2014 and AI-generated work becomes obvious when there\u2019s no coherent thread between stages." },
+      { type: "p", text: "Research on student perceptions shows many students view AI use differently depending on the task \u2014 and scaffolding helps clarify those boundaries. <span class=\"citation\">[9]</span>" },
+      { type: "p", text: "A simple scaffolding sequence:" },
+      { type: "ol", items: [
+        "Brainstorm / topic exploration (low stakes, messy is fine)",
+        "Draft with instructor or peer feedback",
+        "Revision with a memo explaining what changed and why",
+        "Final submission",
+      ]},
+      { type: "p", text: "When you can see the evolution of thinking across stages, you don\u2019t need a detection tool. The work either shows growth or it doesn\u2019t. And students who engage with each stage are doing the learning regardless of what tools they use along the way." },
+    ],
     next: "ai_policy",
   },
   tactic_personal: {
     type: "message",
-    content: "This is where AI hits a wall. It\u2019s trained on the internet — it doesn\u2019t know your classroom.\n\nWays to make assignments AI-resistant through specificity:\n\n\u2022 Reference shared class experiences: \u201CUsing the concept we explored in Tuesday\u2019s activity...\u201D\n\u2022 Require personal narrative: \u201CConnect this theme to a specific moment in your own life\u201D\n\u2022 Use rotating, ephemeral prompts: a song, a local news story, a campus event\n\u2022 Ask students to build on their OWN previous work in the course\n\nThe more your assignments are rooted in the specific, lived experience of your class, the less useful AI becomes — not because you\u2019ve outsmarted it, but because you\u2019ve made the assignment about something it simply doesn\u2019t have access to.",
+    section: "Practical Tactics",
+    content: [
+      { type: "p", text: "This is where AI hits a wall. It\u2019s trained on the internet \u2014 it doesn\u2019t know your classroom." },
+      { type: "p", text: "Ways to make assignments AI-resistant through specificity:" },
+      { type: "ul", items: [
+        "Reference shared class experiences: \u201CUsing the concept we explored in Tuesday\u2019s activity...\u201D",
+        "Require personal narrative: \u201CConnect this theme to a specific moment in your own life\u201D",
+        "Use rotating, ephemeral prompts: a song, a local news story, a campus event",
+        "Ask students to build on their OWN previous work in the course",
+      ]},
+      { type: "p", text: "The more your assignments are rooted in the specific, lived experience of your class, the less useful AI becomes \u2014 not because you\u2019ve outsmarted it, but because you\u2019ve made the assignment about something it simply doesn\u2019t have access to." },
+    ],
     next: "ai_policy",
   },
   tactic_conversation: {
     type: "message",
-    content: "This might be the most underrated strategy of all.\n\nStudents aren\u2019t evil. Research shows most of them use AI because they\u2019re overwhelmed, underprepared, or unclear about expectations — not because they want to cheat. <span class=\"citation\">[3, 4, 5]</span> An honest conversation early in the semester can transform the dynamic.\n\nThings worth saying out loud:\n\u2022 \u201CI know these tools exist. Let\u2019s talk about them.\u201D\n\u2022 \u201CHere\u2019s what I\u2019m actually trying to teach you, and here\u2019s why AI can\u2019t do that for you.\u201D\n\u2022 \u201CHere\u2019s when I think AI could be a useful tool, and here\u2019s when it undermines your learning.\u201D\n\u2022 \u201CI\u2019d rather you come to me struggling than hand in something that isn\u2019t yours.\u201D\n\nTransparency builds trust. Trust reduces the motivation to cheat. It\u2019s that simple.",
+    section: "Practical Tactics",
+    content: [
+      { type: "p", text: "This might be the most underrated strategy of all." },
+      { type: "p", text: "Students aren\u2019t evil. Research shows most of them use AI because they\u2019re overwhelmed, underprepared, or unclear about expectations \u2014 not because they want to cheat. <span class=\"citation\">[3, 4, 5]</span> An honest conversation early in the semester can transform the dynamic." },
+      { type: "p", text: "Things worth saying out loud:" },
+      { type: "ul", items: [
+        "\u201CI know these tools exist. Let\u2019s talk about them.\u201D",
+        "\u201CHere\u2019s what I\u2019m actually trying to teach you, and here\u2019s why AI can\u2019t do that for you.\u201D",
+        "\u201CHere\u2019s when I think AI could be a useful tool, and here\u2019s when it undermines your learning.\u201D",
+        "\u201CI\u2019d rather you come to me struggling than hand in something that isn\u2019t yours.\u201D",
+      ]},
+      { type: "p", text: "Transparency builds trust. Trust reduces the motivation to cheat. It\u2019s that simple." },
+    ],
     next: "ai_policy",
   },
   ai_policy: {
     type: "question",
+    section: "Your AI Policy",
     prompt: "Last question. What kind of AI policy feels right for your classroom?",
     options: [
-      { label: "No AI use — I want fully human work", next: "policy_none" },
-      { label: "Limited use — maybe for brainstorming but not drafting", next: "policy_limited" },
-      { label: "Open use — but with transparency requirements", next: "policy_open" },
+      { label: "No AI use \u2014 I want fully human work", next: "policy_none" },
+      { label: "Limited use \u2014 maybe for brainstorming but not drafting", next: "policy_limited" },
+      { label: "Open use \u2014 but with transparency requirements", next: "policy_open" },
       { label: "I honestly don\u2019t know yet", next: "policy_unsure" },
     ],
   },
   policy_none: {
     type: "message",
-    content: "That\u2019s a legitimate choice — and it\u2019s easier to enforce than you think, as long as you pair it with AI-resistant assignment design.\n\nThe key: your policy is only as strong as your pedagogy. If the assignment can be done by AI, banning AI creates an honor system. If the assignment can\u2019t meaningfully be done by AI, the ban is just a formality.\n\nPair your policy with:\n\u2726 Assignments that require personal specificity\n\u2726 Process documentation (drafts, reflections)\n\u2726 In-class components that connect to out-of-class work\n\nAnd frame it positively: \u201CThis course develops YOUR voice and YOUR thinking — and that requires doing the work yourself.\u201D",
+    section: "Your AI Policy",
+    content: [
+      { type: "p", text: "That\u2019s a legitimate choice \u2014 and it\u2019s easier to enforce than you think, as long as you pair it with AI-resistant assignment design." },
+      { type: "p", text: "The key: your policy is only as strong as your pedagogy. If the assignment can be done by AI, banning AI creates an honor system. If the assignment can\u2019t meaningfully be done by AI, the ban is just a formality." },
+      { type: "p", text: "Pair your policy with:" },
+      { type: "ul", style: "star", items: [
+        "Assignments that require personal specificity",
+        "Process documentation (drafts, reflections)",
+        "In-class components that connect to out-of-class work",
+      ]},
+      { type: "p", text: "And frame it positively: \u201CThis course develops YOUR voice and YOUR thinking \u2014 and that requires doing the work yourself.\u201D" },
+    ],
     next: "closing",
   },
   policy_limited: {
     type: "message",
-    content: "This is where a lot of faculty land, and it can work beautifully — with clear boundaries. Studies from elite colleges show that students are already using AI in nuanced ways — for brainstorming, editing, and conceptual understanding — so a bounded policy often matches their actual behavior. <span class=\"citation\">[10]</span>\n\nA framework that works:\n\u2022 AI is fine for: brainstorming, outlining, checking grammar, explaining concepts you\u2019re stuck on\n\u2022 AI is not fine for: generating draft text, writing conclusions, producing content you submit as your own\n\u2022 The rule: if AI shaped your thinking, that\u2019s learning. If AI replaced your thinking, that\u2019s a problem.\n\nRequire a brief \u201CAI use disclosure\u201D with submissions — not as a gotcha, but as a norm. \u201CDid you use any AI tools? If so, how?\u201D This normalizes honesty and gives you useful data about how students are actually working.",
+    section: "Your AI Policy",
+    content: [
+      { type: "p", text: "This is where a lot of faculty land, and it can work beautifully \u2014 with clear boundaries. Studies from elite colleges show that students are already using AI in nuanced ways \u2014 for brainstorming, editing, and conceptual understanding \u2014 so a bounded policy often matches their actual behavior. <span class=\"citation\">[10]</span>" },
+      { type: "p", text: "A framework that works:" },
+      { type: "ul", items: [
+        "AI is fine for: brainstorming, outlining, checking grammar, explaining concepts you\u2019re stuck on",
+        "AI is not fine for: generating draft text, writing conclusions, producing content you submit as your own",
+        "The rule: if AI shaped your thinking, that\u2019s learning. If AI replaced your thinking, that\u2019s a problem.",
+      ]},
+      { type: "p", text: "Require a brief \u201CAI use disclosure\u201D with submissions \u2014 not as a gotcha, but as a norm. \u201CDid you use any AI tools? If so, how?\u201D This normalizes honesty and gives you useful data about how students are actually working." },
+    ],
     next: "closing",
   },
   policy_open: {
     type: "message",
-    content: "Bold — and increasingly the direction higher ed is heading. Research shows the majority of students are already using generative AI for schoolwork <span class=\"citation\">[7]</span>, and global surveys indicate students want clear guidance, not silence. <span class=\"citation\">[4]</span> The key is making transparency non-negotiable.\n\nA framework for open AI use:\n\u2022 Students must disclose what tools they used and how\n\u2022 Students must be able to explain and defend every element of their work\n\u2022 Assessment shifts toward process, reflection, and oral defense\n\u2022 The learning objectives focus on critical thinking, synthesis, and application — things AI can assist with but not replace\n\nThis approach treats AI as a professional tool and teaches students to use it ethically — which, honestly, is a skill they\u2019ll need. Just make sure your assignments still require genuine cognitive engagement, not just prompt engineering.",
+    section: "Your AI Policy",
+    content: [
+      { type: "p", text: "Bold \u2014 and increasingly the direction higher ed is heading. Research shows the majority of students are already using generative AI for schoolwork <span class=\"citation\">[7]</span>, and global surveys indicate students want clear guidance, not silence. <span class=\"citation\">[4]</span> The key is making transparency non-negotiable." },
+      { type: "p", text: "A framework for open AI use:" },
+      { type: "ul", items: [
+        "Students must disclose what tools they used and how",
+        "Students must be able to explain and defend every element of their work",
+        "Assessment shifts toward process, reflection, and oral defense",
+        "The learning objectives focus on critical thinking, synthesis, and application \u2014 things AI can assist with but not replace",
+      ]},
+      { type: "p", text: "This approach treats AI as a professional tool and teaches students to use it ethically \u2014 which, honestly, is a skill they\u2019ll need. Just make sure your assignments still require genuine cognitive engagement, not just prompt engineering." },
+    ],
     next: "closing",
   },
   policy_unsure: {
     type: "message",
-    content: "That\u2019s completely okay. You don\u2019t need a perfect policy on day one.\n\nHere\u2019s a starting point that buys you time while keeping things honest:\n\n\u201CAI tools are evolving fast, and so is my thinking about them. For now, here\u2019s where I stand: [your current boundary]. I may adjust this as we go. What I ask is that you\u2019re always honest with me about how you\u2019re working. I\u2019d rather have that conversation than play detective.\u201D\n\nThat\u2019s it. That\u2019s a policy. It\u2019s human, it\u2019s flexible, and it invites students into the process rather than setting up a surveillance dynamic.\n\nYou can refine it as you learn what works for your specific students and discipline.",
+    section: "Your AI Policy",
+    content: [
+      { type: "p", text: "That\u2019s completely okay. You don\u2019t need a perfect policy on day one." },
+      { type: "p", text: "Here\u2019s a starting point that buys you time while keeping things honest:" },
+      { type: "p", text: "\u201CAI tools are evolving fast, and so is my thinking about them. For now, here\u2019s where I stand: [your current boundary]. I may adjust this as we go. What I ask is that you\u2019re always honest with me about how you\u2019re working. I\u2019d rather have that conversation than play detective.\u201D" },
+      { type: "p", text: "That\u2019s it. That\u2019s a policy. It\u2019s human, it\u2019s flexible, and it invites students into the process rather than setting up a surveillance dynamic." },
+      { type: "p", text: "You can refine it as you learn what works for your specific students and discipline." },
+    ],
     next: "closing",
   },
-  closing: { type: "closing" },
+  closing: { type: "closing", section: "Next Steps" },
 };
 
 const REFERENCES = [
@@ -513,127 +824,163 @@ const REFERENCES = [
 // State
 let history = ["welcome"];
 let selections = {};
+let stepCounter = 0;
+
+function announce(message) {
+  const el = document.getElementById("live-announcements");
+  el.textContent = "";
+  setTimeout(() => { el.textContent = message; }, 100);
+}
 
 function render() {
   const app = document.getElementById("app");
   app.innerHTML = "";
   history.forEach((stepId, idx) => {
     const isLatest = idx === history.length - 1;
-    const el = renderStep(stepId, isLatest);
+    const el = renderStep(stepId, isLatest, idx);
     if (el) app.appendChild(el);
   });
-  // Scroll to bottom
-  setTimeout(() => {
-    const lastStep = app.lastElementChild;
-    if (lastStep) lastStep.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, 50);
 }
 
-function renderContent(html) {
-  // Process the content string into formatted HTML
-  const lines = html.split("\n");
-  let result = "";
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (trimmed === "") {
-      result += '<div class="spacer"></div>';
-    } else if (trimmed.startsWith("\u2022") || trimmed.startsWith("\u2726")) {
-      result += '<div class="bullet">' + trimmed + '</div>';
-    } else if (/^\d+\./.test(trimmed)) {
-      result += '<div class="bullet">' + trimmed + '</div>';
-    } else if (trimmed.startsWith("\u2192")) {
-      result += '<div class="arrow">' + trimmed + '</div>';
-    } else {
-      result += '<p>' + trimmed + '</p>';
+function focusNewStep() {
+  setTimeout(() => {
+    const steps = document.querySelectorAll(".step");
+    const lastStep = steps[steps.length - 1];
+    if (lastStep) {
+      const focusTarget = lastStep.querySelector("[data-autofocus]") || lastStep.querySelector("button:not([aria-disabled='true'])") || lastStep;
+      if (!focusTarget.hasAttribute("tabindex")) {
+        focusTarget.setAttribute("tabindex", "-1");
+      }
+      focusTarget.focus({ preventScroll: false });
+      focusTarget.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, 100);
+}
+
+function renderContentBlocks(blocks) {
+  let html = "";
+  for (const block of blocks) {
+    if (block.type === "p") {
+      html += "<p>" + block.text + "</p>";
+    } else if (block.type === "arrow") {
+      html += '<p class="arrow-text">' + block.text + "</p>";
+    } else if (block.type === "ul") {
+      const cls = block.style === "star" ? "bullet-list star" : "bullet-list";
+      html += '<ul class="' + cls + '" role="list">';
+      for (const item of block.items) {
+        html += "<li>" + item + "</li>";
+      }
+      html += "</ul>";
+    } else if (block.type === "ol") {
+      html += '<ol class="numbered-list" role="list">';
+      for (const item of block.items) {
+        html += "<li>" + item + "</li>";
+      }
+      html += "</ol>";
     }
   }
-  return result;
+  return html;
 }
 
-function renderStep(stepId, isLatest) {
+function renderStep(stepId, isLatest, idx) {
   const step = STEPS[stepId];
   if (!step) return null;
 
-  const wrapper = document.createElement("div");
+  const wrapper = document.createElement("section");
   wrapper.className = "step";
+  wrapper.setAttribute("aria-label", step.section || "Guide section");
 
   if (step.type === "intro") {
-    wrapper.innerHTML = `
-      <div class="intro">
-        <div class="badge">Interactive Guide</div>
-        <h1>Teaching, Not Policing</h1>
-        <p class="subtitle">Moving Beyond AI Detection in Academic Integrity</p>
-        <div class="divider"></div>
-        <p class="intro-text">
-          You don\u2019t need to become an AI expert. You don\u2019t need detection tools.
-          You need a few practical shifts in how you think about your classroom.
-          This guide will walk you through it — at your pace, based on your situation.
-          Grounded in current research on AI in higher education. <span class="citation">[5, 8]</span>
-        </p>
-        <button class="btn-primary" onclick="goTo('feeling')">Let\u2019s start \u2192</button>
-      </div>
-    `;
+    wrapper.innerHTML =
+      '<div class="intro">' +
+        '<div class="badge" aria-hidden="true">Interactive Guide</div>' +
+        '<h1>Teaching, Not Policing</h1>' +
+        '<p class="subtitle">Moving Beyond AI Detection in Academic Integrity</p>' +
+        '<div class="divider" aria-hidden="true"></div>' +
+        '<p class="intro-text">' +
+          'You don\u2019t need to become an AI expert. You don\u2019t need detection tools. ' +
+          'You need a few practical shifts in how you think about your classroom. ' +
+          'This guide will walk you through it \u2014 at your pace, based on your situation. ' +
+          'Grounded in current research on AI in higher education. <span class="citation">[5, 8]</span>' +
+        '</p>' +
+        '<button class="btn-primary" onclick="goTo(\'feeling\')" data-autofocus>Let\u2019s start \u2192</button>' +
+      '</div>';
   } else if (step.type === "question") {
     const selected = selections[stepId];
+    const qId = "q-" + stepId;
     let optionsHtml = "";
-    for (const opt of step.options) {
+    step.options.forEach((opt, optIdx) => {
       const isSelected = selected === opt.label;
-      const isOther = selected && !isSelected;
-      const cls = isSelected ? "option-btn selected" : isOther ? "option-btn dimmed" : "option-btn";
-      const onclick = selected ? "" : `onclick="selectOption('${stepId}', '${opt.label.replace(/'/g, "\\'")}', '${opt.next}')"`;
-      optionsHtml += `<button class="${cls}" ${onclick}>${opt.label}</button>`;
-    }
-    wrapper.innerHTML = `
-      <div class="question-block">
-        <p class="question-prompt">${step.prompt}</p>
-        <div class="options">${optionsHtml}</div>
-      </div>
-    `;
+      const isDisabled = selected && !isSelected;
+      const btnId = qId + "-opt-" + optIdx;
+      optionsHtml +=
+        '<button ' +
+          'id="' + btnId + '" ' +
+          'class="option-btn" ' +
+          'role="radio" ' +
+          'aria-checked="' + (isSelected ? "true" : "false") + '" ' +
+          'aria-pressed="' + (isSelected ? "true" : "false") + '" ' +
+          (selected ? 'aria-disabled="true" ' : "") +
+          (!selected ? 'onclick="selectOption(\'' + stepId + '\', \'' + opt.label.replace(/'/g, "\\'") + '\', \'' + opt.next + '\')" ' : "") +
+          (isLatest && !selected && optIdx === 0 ? 'data-autofocus ' : '') +
+        '>' +
+          opt.label +
+        '</button>';
+    });
+    wrapper.innerHTML =
+      '<div class="question-block">' +
+        '<h2 class="question-prompt" id="' + qId + '-label">' + step.prompt + '</h2>' +
+        '<div class="options" role="radiogroup" aria-labelledby="' + qId + '-label">' +
+          optionsHtml +
+        '</div>' +
+      '</div>';
   } else if (step.type === "message") {
     const continueBtn = isLatest && step.next
-      ? `<button class="btn-continue" onclick="goTo('${step.next}')">Continue \u2192</button>`
+      ? '<button class="btn-continue" onclick="goTo(\'' + step.next + '\')" data-autofocus>Continue \u2192</button>'
       : "";
-    wrapper.innerHTML = `
-      <div class="message-card">
-        <div>${renderContent(step.content)}</div>
-        ${continueBtn}
-      </div>
-    `;
+    wrapper.innerHTML =
+      '<div class="message-card" role="region" aria-label="Guide response">' +
+        '<div>' + renderContentBlocks(step.content) + '</div>' +
+        continueBtn +
+      '</div>';
   } else if (step.type === "closing") {
     let refsHtml = "";
     for (const ref of REFERENCES) {
-      refsHtml += `<p class="ref-entry"><span class="ref-num">[${ref.num}]</span> ${ref.text}</p>`;
+      refsHtml += '<li><span class="ref-num">[' + ref.num + ']</span> ' + ref.text + '</li>';
     }
-    wrapper.innerHTML = `
-      <div class="closing">
-        <div class="check-circle">\u2713</div>
-        <h2>You\u2019ve got this.</h2>
-        <p class="closing-text">
-          You don\u2019t need to solve AI in academia today. You just need to take
-          one step: pick one assignment, make one change, and see what happens.
-        </p>
-        <p class="closing-text" style="margin-bottom: 0;">
-          The goal was never to catch students. It was always to teach them.
-        </p>
-        <div class="checklist-box">
-          <div class="checklist-label">Your Monday morning checklist</div>
-          <div class="checklist-item">\u2610 Pick one upcoming assignment to redesign</div>
-          <div class="checklist-item">\u2610 Add a personal or class-specific element</div>
-          <div class="checklist-item">\u2610 Include a reflection component</div>
-          <div class="checklist-item">\u2610 Have an honest conversation with your students about AI</div>
-          <div class="checklist-item">\u2610 Breathe. You\u2019re already doing better than you think.</div>
-        </div>
-        <button class="btn-reset" onclick="resetGuide()">Start over with different choices</button>
-        <p class="credit">
-          Based on \u201CTeaching, Not Policing: Moving Beyond AI Detection in Academic Integrity\u201D<br>
-          Lauren B. Schwartz \u00B7 Salem Community College
-        </p>
-        <details class="references-toggle">
-          <summary>\u25BE Sources & References</summary>
-          <div class="references-box">${refsHtml}</div>
-        </details>
-      </div>
-    `;
+    wrapper.innerHTML =
+      '<div class="closing">' +
+        '<div class="check-circle" aria-hidden="true">\u2713</div>' +
+        '<h2 data-autofocus tabindex="-1">You\u2019ve got this.</h2>' +
+        '<p class="closing-text">' +
+          'You don\u2019t need to solve AI in academia today. You just need to take ' +
+          'one step: pick one assignment, make one change, and see what happens.' +
+        '</p>' +
+        '<p class="closing-text">' +
+          'The goal was never to catch students. It was always to teach them.' +
+        '</p>' +
+        '<div class="checklist-box">' +
+          '<h3 class="checklist-label">Your Monday morning checklist</h3>' +
+          '<ul class="checklist" role="list">' +
+            '<li>Pick one upcoming assignment to redesign</li>' +
+            '<li>Add a personal or class-specific element</li>' +
+            '<li>Include a reflection component</li>' +
+            '<li>Have an honest conversation with your students about AI</li>' +
+            '<li>Breathe. You\u2019re already doing better than you think.</li>' +
+          '</ul>' +
+        '</div>' +
+        '<button class="btn-reset" onclick="resetGuide()">Start over with different choices</button>' +
+        '<p class="credit">' +
+          'Based on \u201CTeaching, Not Policing: Moving Beyond AI Detection in Academic Integrity\u201D<br>' +
+          'Lauren B. Schwartz \u00B7 Salem Community College' +
+        '</p>' +
+        '<details class="references-toggle">' +
+          '<summary>Sources &amp; References</summary>' +
+          '<nav class="references-box" aria-label="Reference list">' +
+            '<ol class="ref-list" role="list">' + refsHtml + '</ol>' +
+          '</nav>' +
+        '</details>' +
+      '</div>';
   }
 
   return wrapper;
@@ -642,23 +989,66 @@ function renderStep(stepId, isLatest) {
 function goTo(stepId) {
   history.push(stepId);
   render();
+  const step = STEPS[stepId];
+  if (step) {
+    const sectionName = step.section || "Next section";
+    if (step.type === "question") {
+      announce("New question: " + step.prompt);
+    } else if (step.type === "closing") {
+      announce("You\u2019ve completed the guide. Here are your next steps.");
+    } else {
+      announce("Navigated to " + sectionName + ". New content loaded.");
+    }
+  }
+  focusNewStep();
 }
 
 function selectOption(stepId, label, next) {
   selections[stepId] = label;
   history.push(next);
+  announce("You selected: " + label + ". Loading response.");
   render();
+  focusNewStep();
 }
 
 function resetGuide() {
   history = ["welcome"];
   selections = {};
   render();
+  announce("Guide reset. Starting from the beginning.");
+  focusNewStep();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+// Keyboard navigation within radiogroups
+document.addEventListener("keydown", function(e) {
+  const target = e.target;
+  if (target.getAttribute("role") !== "radio") return;
+  if (target.getAttribute("aria-disabled") === "true") return;
+
+  const group = target.closest("[role='radiogroup']");
+  if (!group) return;
+
+  const buttons = Array.from(group.querySelectorAll("[role='radio']:not([aria-disabled='true'])"));
+  const currentIdx = buttons.indexOf(target);
+
+  let nextIdx = -1;
+  if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+    e.preventDefault();
+    nextIdx = (currentIdx + 1) % buttons.length;
+  } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+    e.preventDefault();
+    nextIdx = (currentIdx - 1 + buttons.length) % buttons.length;
+  }
+
+  if (nextIdx >= 0 && buttons[nextIdx]) {
+    buttons[nextIdx].focus();
+  }
+});
 
 // Initial render
 render();
 </script>
+
 </body>
 </html>
